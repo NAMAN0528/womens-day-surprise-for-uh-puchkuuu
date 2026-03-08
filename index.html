@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Women's Day Surprise</title>
+<style>
+body{
+  margin:0;
+  text-align:center;
+  font-family:Arial;
+  background:linear-gradient(#ff9ecb,#ffffff);
+  overflow:hidden;
+}
+h1{margin-top:80px;}
+button{
+  padding:12px 25px;
+  font-size:18px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#ff4da6;
+  color:white;
+}
+#gift{font-size:70px; cursor:pointer;}
+#bigHeart{
+  font-size:100px;
+  cursor:pointer;
+  display:none;
+  margin-top:40px;
+}
+#photo{
+  display:none;
+  opacity:0;
+  transition: opacity 1s ease, transform 1s ease;
+  width:320px;
+  border-radius:20px;
+  margin-top:50px;
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+  box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+.floating{
+  position:absolute;
+  font-size:25px;
+  animation-name: rise;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  cursor:pointer;
+}
+@keyframes rise{
+  0%{transform:translateY(100vh);}
+  100%{transform:translateY(-10vh);}
+}
+#desc, #choices, #angry, #lastStep, #loveyMsg, #final{
+  display:none;
+}
+#loveyMsg, #final{
+  font-size:22px;
+  padding:25px;
+  max-width:700px;
+  margin:auto;
+}
+</style>
+</head>
+<body>
+
+<h1>Happy Women's Day 🌸</h1>
+<p id="tap">Tap for gift 🎁</p>
+<div id="gift" onclick="showDesc()">🎁</div>
+
+<!-- Description Section -->
+<div id="desc">
+  <p>A small interactive Women's Day surprise website made with love for uhh babyygirl!!</p>
+</div>
+
+<!-- Open / Ignore Choices -->
+<div id="choices">
+  <button onclick="openGift()">Open 💝</button>
+  <button onclick="ignoreGift()">Ignore 🙄</button>
+</div>
+
+<!-- Angry response if ignored -->
+<p id="angry"></p>
+
+<!-- Big Heart -->
+<div id="bigHeart" onclick="startSurprise()">❤️</div>
+
+<!-- Photos -->
+<img id="photo">
+
+<!-- Last thing button after photos -->
+<div id="lastStep">
+  <button id="lastBtn" onclick="showLoveyMessage()">One more last thing for u babyyyy 💖</button>
+</div>
+
+<!-- Lovey-dovey paragraph -->
+<div id="loveyMsg">
+<p>
+Hey babyygirl 💖, you’re not just my best friend — you’re my daily dose of laughter, my partner in all the crazy adventures, and the person who makes even the smallest moments unforgettable. Every smile, every silly joke, every random chat with you fills my heart with happiness. I just wanted to remind you today how truly special you are to me, how much I adore you, and that no matter what, you always have a piece of my heart 💞❤️. Thank you for being YOU — amazing, beautiful, and completely irreplaceable!
+</p>
+<button id="okBtn" onclick="showFinalMessage()">Ok 💖</button>
+</div>
+
+<!-- Final centered message -->
+<div id="final">
+<p>Once again Happy Women's Day… gift ni de paya to ky i have made this for u with love… hope u liked it 💖❤️💞</p>
+</div>
+
+<!-- Music -->
+<audio id="music">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let photos = [
+"photo1.jpg.png",
+"photo2.jpg.png",
+"photo3.jpg.png",
+"photo4.jpg.png",
+"photo5.jpg.png",
+"photo6.jpg.png",
+"photo7.jpg.png"
+];
+let current = 0;
+let heartsInterval;
+
+// Show description after tapping gift
+function showDesc(){
+  document.getElementById("gift").style.display="none";
+  document.getElementById("tap").style.display="none";
+  document.getElementById("desc").style.display="block";
+  document.getElementById("choices").style.display="block";
+}
+
+// Ignore button → show cute angry message
+function ignoreGift(){
+  document.getElementById("angry").innerHTML="No wayyy 😤 you can't ignore this!! You HAVE to open it!!";
+  document.getElementById("angry").style.display="block";
+}
+
+// Open gift → show big heart
+function openGift(){
+  document.getElementById("choices").style.display="none";
+  document.getElementById("angry").style.display="none";
+  document.getElementById("bigHeart").style.display="block";
+}
+
+// Tap big heart → start music + floating hearts
+function startSurprise(){
+  document.getElementById("bigHeart").style.display="none";
+  let music = document.getElementById("music");
+  music.play();
+  spawnHeart();
+  heartsInterval = setInterval(spawnHeart, 1200);
+}
+
+// Floating hearts function
+function spawnHeart(){
+  let heart = document.createElement("div");
+  heart.innerHTML = "💖";
+  heart.className = "floating";
+  heart.style.left = Math.random()*100 + "vw";
+  let duration = Math.random()*4 + 6; // slow rise
+  heart.style.animationDuration = duration + "s";
+  heart.onclick = function(){ showPhoto(heart); };
+  document.body.appendChild(heart);
+  setTimeout(()=>{heart.remove();}, duration*1000);
+}
+
+// Show photos one by one with fade-in/out + zoom
+function showPhoto(heart){
+  heart.remove();
+  if(current >= photos.length){
+    document.getElementById("photo").style.display="none";
+    clearInterval(heartsInterval); // stop hearts
+    document.getElementById("lastStep").style.display="block"; // last thing button
+    return;
+  }
+  let photoEl = document.getElementById("photo");
+  photoEl.src = photos[current];
+  photoEl.style.opacity = 0;
+  photoEl.style.transform = "scale(0.5)";
+  photoEl.style.display = "block";
+  current++;
+  setTimeout(()=>{
+    photoEl.style.opacity = 1;
+    photoEl.style.transform = "scale(1)";
+  },50);
+  setTimeout(()=>{
+    photoEl.style.opacity = 0;
+    photoEl.style.transform = "scale(0.5)";
+    setTimeout(()=>{photoEl.style.display="none";},1000);
+  },5000);
+}
+
+// Show lovey-dovey paragraph
+function showLoveyMessage(){
+  document.getElementById("lastStep").style.display="none";
+  document.getElementById("loveyMsg").style.display="block";
+  let music = document.getElementById("music");
+  music.pause();
+  music.currentTime = 0;
+}
+
+// Show final centered message after Ok
+function showFinalMessage(){
+  document.getElementById("loveyMsg").style.display="none";
+  document.getElementById("final").style.display="block";
+}
+</script>
+
+</body>
+</html>
